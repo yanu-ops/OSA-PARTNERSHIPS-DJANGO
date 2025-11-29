@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import {  Mail, Lock, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import Logo from '../../components/common/Logo';
@@ -15,9 +15,8 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [emailStatus, setEmailStatus] = useState(null); 
+  const [emailStatus, setEmailStatus] = useState(null);
   const [checkingEmail, setCheckingEmail] = useState(false);
-
 
   useEffect(() => {
     const checkEmail = async () => {
@@ -27,9 +26,8 @@ const Login = () => {
           const response = await api.post('/auth/check-email-status', {
             email: formData.email
           });
-          
           if (response.data.success) {
-            setEmailStatus(response.data.status); 
+            setEmailStatus(response.data.status);
           }
         } catch (error) {
           setEmailStatus(null);
@@ -40,7 +38,7 @@ const Login = () => {
       }
     };
 
-    const timeoutId = setTimeout(checkEmail, 500); 
+    const timeoutId = setTimeout(checkEmail, 500);
     return () => clearTimeout(timeoutId);
   }, [formData.email]);
 
@@ -59,7 +57,6 @@ const Login = () => {
 
     if (result.success) {
       toast.success('Login successful!');
-      
       if (result.user.role === 'admin') {
         navigate('/admin/dashboard');
       } else if (result.user.role === 'department') {
@@ -78,15 +75,12 @@ const Login = () => {
     if (checkingEmail) {
       return <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />;
     }
-
     if (emailStatus === 'approved') {
       return <CheckCircle className="w-5 h-5 text-green-600" />;
     }
-
     if (emailStatus === 'pending' || emailStatus === 'rejected' || emailStatus === 'not_found') {
       return <XCircle className="w-5 h-5 text-red-600" />;
     }
-
     return null;
   };
 
@@ -108,23 +102,25 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center p-4 relative">
-  
+
+      {/* Back to Public View Button */}
       <div className="absolute top-6 left-6">
-        <div className="w-10 h-10 bg-red-700 rounded-lg flex items-center justify-center shadow-lg">
+        <button
+          onClick={() => navigate('/public')}
+          className="w-10 h-10 bg-red-700 rounded-lg flex items-center justify-center shadow-lg hover:bg-red-800 transition-colors"
+        >
           <span className="text-white font-bold text-1xl">45</span>
-        </div>
+        </button>
       </div>
 
       <div className="max-w-md w-full">
-
         <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-    <Logo size="xlarge" />
-  </div>
+          <div className="flex justify-center mb-4">
+            <Logo size="xlarge" />
+          </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
           <p className="text-gray-700">OSA Partnership Monitoring System</p>
         </div>
-
 
         <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-200">
           {error && (
@@ -135,11 +131,8 @@ const Login = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
@@ -151,7 +144,6 @@ const Login = () => {
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="your.email@example.com"
                 />
-
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                   {getEmailStatusIcon()}
                 </div>
@@ -159,11 +151,8 @@ const Login = () => {
               {getEmailStatusMessage()}
             </div>
 
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
               <div className="relative">
                 <Lock className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
@@ -186,7 +175,6 @@ const Login = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-700">

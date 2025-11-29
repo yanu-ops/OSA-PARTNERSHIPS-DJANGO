@@ -2,12 +2,50 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db.models import Q, Count
 from .models import Partnership, AuditLog
 from .serializers import PartnershipSerializer, PartnershipLimitedSerializer
 from .permissions import IsAdminOrDepartment, IsAdminOrOwnDepartment
 import json
+
+
+# ============= PUBLIC PARTNERSHIPS (NO AUTH REQUIRED) =============
+@api_view(['GET'])
+@permission_classes([AllowAny])  # No authentication required
+def get_public_partnerships(request):
+    """Get all partnerships with limited info (public access)"""
+    partnerships = Partnership.objects.all()
+    
+    # Apply filters
+    department = request.query_params.get('department')
+    school_year = request.query_params.get('school_year')
+    search = request.query_params.get('search')
+    
+    if department:
+        partnerships = partnerships.filter(department=department)
+    
+    if school_year:
+        partnerships = partnerships.filter(school_year=school_year)
+    
+    if search:
+        partnerships = partnerships.filter(
+            Q(business_name__icontains=search) |
+            Q(department__icontains=search)
+        )
+    
+    # Always return limited serializer for public access
+    serializer = PartnershipLimitedSerializer(
+        partnerships,
+        many=True,
+        context={'request': request}
+    )
+    
+    return Response({
+        'success': True,
+        'count': partnerships.count(),
+        'data': serializer.data
+    })
 
 
 @api_view(['GET', 'POST'])
