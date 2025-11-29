@@ -9,7 +9,7 @@ from .serializers import PartnershipSerializer, PartnershipLimitedSerializer
 from .permissions import IsAdminOrDepartment, IsAdminOrOwnDepartment
 import json
 
-# ============= LIST & CREATE PARTNERSHIPS =============
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
@@ -21,7 +21,6 @@ def manage_partnerships(request):
     if request.method == 'GET':
         partnerships = Partnership.objects.all()
         
-        # Apply filters
         department = request.query_params.get('department')
         status_filter = request.query_params.get('status')
         school_year = request.query_params.get('school_year')
@@ -42,19 +41,15 @@ def manage_partnerships(request):
                 Q(contact_person__icontains=search)
             )
         
-        # Determine which serializer to use based on user role and department
         user = request.user
-        
-        # Apply access control and serialize
+
         serialized_data = []
         for partnership in partnerships:
-            # Viewer: limited access to all
             if user.role == 'viewer':
                 serializer = PartnershipLimitedSerializer(
                     partnership,
                     context={'request': request}
                 )
-            # Department: full access to own, limited to others
             elif user.role == 'department':
                 if partnership.department == user.department:
                     serializer = PartnershipSerializer(
@@ -66,7 +61,7 @@ def manage_partnerships(request):
                         partnership,
                         context={'request': request}
                     )
-            # Admin: full access to all
+
             else:
                 serializer = PartnershipSerializer(
                     partnership,
@@ -82,14 +77,12 @@ def manage_partnerships(request):
         })
     
     elif request.method == 'POST':
-        # Check permission (admin or department only)
         if request.user.role not in ['admin', 'department']:
             return Response({
                 'success': False,
                 'message': 'You do not have permission to create partnerships'
             }, status=status.HTTP_403_FORBIDDEN)
         
-        # Debug: Print received data
         print("Received data:", request.data)
         print("Content-Type:", request.content_type)
         
@@ -101,7 +94,6 @@ def manage_partnerships(request):
         if serializer.is_valid():
             partnership = serializer.save(created_by=request.user)
             
-            # Create audit log
             AuditLog.objects.create(
                 user=request.user,
                 action='CREATE',
@@ -116,7 +108,6 @@ def manage_partnerships(request):
                 'data': PartnershipSerializer(partnership, context={'request': request}).data
             }, status=status.HTTP_201_CREATED)
         
-        # Debug: Print validation errors
         print("Validation errors:", serializer.errors)
         
         return Response({
@@ -125,7 +116,7 @@ def manage_partnerships(request):
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
-# ============= GET, UPDATE, DELETE SINGLE PARTNERSHIP =============
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
@@ -146,7 +137,6 @@ def manage_partnership_detail(request, pk):
     if request.method == 'GET':
         user = request.user
         
-        # Determine which serializer to use
         if user.role == 'viewer':
             serializer = PartnershipLimitedSerializer(
                 partnership,
@@ -175,14 +165,12 @@ def manage_partnership_detail(request, pk):
         })
     
     elif request.method == 'PUT':
-        # Check permission
         if request.user.role not in ['admin', 'department']:
             return Response({
                 'success': False,
                 'message': 'You do not have permission to update partnerships'
             }, status=status.HTTP_403_FORBIDDEN)
         
-        # Check permission for department users
         if request.user.role == 'department':
             if partnership.department != request.user.department:
                 return Response({
@@ -202,7 +190,6 @@ def manage_partnership_detail(request, pk):
         if serializer.is_valid():
             partnership = serializer.save()
             
-            # Create audit log
             AuditLog.objects.create(
                 user=request.user,
                 action='UPDATE',
@@ -225,14 +212,13 @@ def manage_partnership_detail(request, pk):
         }, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        # Check permission
+
         if request.user.role not in ['admin', 'department']:
             return Response({
                 'success': False,
                 'message': 'You do not have permission to delete partnerships'
             }, status=status.HTTP_403_FORBIDDEN)
         
-        # Check permission for department users
         if request.user.role == 'department':
             if partnership.department != request.user.department:
                 return Response({
@@ -242,7 +228,6 @@ def manage_partnership_detail(request, pk):
         
         old_values = PartnershipSerializer(partnership, context={'request': request}).data
         
-        # Create audit log before deleting
         AuditLog.objects.create(
             user=request.user,
             action='DELETE',
@@ -258,7 +243,6 @@ def manage_partnership_detail(request, pk):
             'message': 'Partnership deleted successfully'
         })
 
-# ============= STATISTICS =============
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_statistics(request):
@@ -266,11 +250,9 @@ def get_statistics(request):
     user = request.user
     partnerships = Partnership.objects.all()
     
-    # Filter by department for department users
     if user.role == 'department':
         partnerships = partnerships.filter(department=user.department)
-    
-    # Calculate statistics
+
     stats = {
         'total': partnerships.count(),
         'active': partnerships.filter(status='active').count(),
@@ -279,8 +261,7 @@ def get_statistics(request):
         'non_renewal': partnerships.filter(status='non_renewal').count(),
         'by_department': {}
     }
-    
-    # Count by department
+
     dept_counts = partnerships.values('department').annotate(count=Count('id'))
     for item in dept_counts:
         stats['by_department'][item['department']] = item['count']

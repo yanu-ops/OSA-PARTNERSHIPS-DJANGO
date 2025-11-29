@@ -101,6 +101,43 @@ def manage_user_detail(request, pk):
             'message': 'User deleted successfully'
         })
 
+# ============= CHANGE USER PASSWORD (ADMIN) =============
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def change_user_password(request, pk):
+    """Admin changes user password"""
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response({
+            'success': False,
+            'message': 'User not found'
+        }, status=status.HTTP_404_NOT_FOUND)
+    
+    new_password = request.data.get('newPassword')
+    
+    if not new_password:
+        return Response({
+            'success': False,
+            'message': 'New password is required'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Validate password strength
+    if len(new_password) < 8:
+        return Response({
+            'success': False,
+            'message': 'Password must be at least 8 characters'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Set new password
+    user.set_password(new_password)
+    user.save()
+    
+    return Response({
+        'success': True,
+        'message': 'Password changed successfully'
+    })
+
 # ============= PENDING USERS =============
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdmin])

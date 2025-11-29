@@ -15,9 +15,8 @@ def register(request):
     """Register a new user (pending approval)"""
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
-        # Create user but set as NOT approved (pending)
         user = serializer.save()
-        user.is_approved = False  # Set as pending
+        user.is_approved = False 
         user.save()
         
         return Response({
@@ -52,11 +51,10 @@ def login(request):
     try:
         user = User.objects.get(email=email, is_active=True)
         
-        # Check if password is correct
+
         if not user.check_password(password):
             raise User.DoesNotExist
         
-        # Check if user is approved
         if not user.is_approved:
             return Response({
                 'success': False,
@@ -104,14 +102,12 @@ def change_password(request):
     
     user = request.user
     
-    # Check current password
     if not user.check_password(serializer.validated_data['currentPassword']):
         return Response({
             'success': False,
             'message': 'Current password is incorrect'
         }, status=status.HTTP_400_BAD_REQUEST)
     
-    # Set new password
     user.set_password(serializer.validated_data['newPassword'])
     user.save()
     
@@ -137,3 +133,37 @@ def check_email(request):
         'success': True,
         'exists': exists
     })
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def check_email_status(request):
+    """Check email approval status for login page"""
+    email = request.data.get('email')
+    if not email:
+        return Response({
+            'success': False,
+            'message': 'Email is required'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = User.objects.get(email=email)
+        
+        if user.is_approved:
+            user_status = 'approved'
+        elif user.rejection_reason:
+            user_status = 'rejected'
+        else:
+            user_status = 'pending'
+        
+        return Response({
+            'success': True,
+            'status': user_status,
+            'message': f'Account is {user_status}'
+        })
+    
+    except User.DoesNotExist:
+        return Response({
+            'success': True,
+            'status': 'not_found',
+            'message': 'Email not registered'
+        })

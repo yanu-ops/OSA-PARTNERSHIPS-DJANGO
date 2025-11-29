@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('role', 'admin')
         extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('is_approved', True)  # Auto-approve superusers
+        extra_fields.setdefault('is_approved', True) 
         
         return self.create_user(email, password, **extra_fields)
 
@@ -45,8 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_approved = models.BooleanField(default=False)  # NEW: Approval status
-    rejection_reason = models.TextField(null=True, blank=True)  # NEW: Rejection reason
+    is_approved = models.BooleanField(default=False)  
+    rejection_reason = models.TextField(null=True, blank=True) 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -63,7 +63,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.email} ({self.get_role_display()})"
     
     def save(self, *args, **kwargs):
-        # Set department to None if role is not department
         if self.role != 'department':
             self.department = None
         super().save(*args, **kwargs)

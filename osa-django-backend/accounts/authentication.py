@@ -13,23 +13,22 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
         
         try:
-            # Extract token from "Bearer <token>"
+
             prefix, token = auth_header.split(' ')
             if prefix.lower() != 'bearer':
                 return None
             
-            # Decode token
+    
             payload = jwt.decode(
                 token,
                 settings.JWT_SECRET_KEY,
                 algorithms=[settings.JWT_ALGORITHM]
             )
             
-            # Get user - must be active AND approved
             user = User.objects.get(
                 id=payload['userId'], 
                 is_active=True,
-                is_approved=True  # Must be approved
+                is_approved=True  
             )
             
             return (user, token)

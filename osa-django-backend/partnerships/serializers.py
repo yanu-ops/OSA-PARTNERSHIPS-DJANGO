@@ -4,7 +4,6 @@ from .models import Partnership, AuditLog
 class PartnershipSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     
-    # Make image field not required and allow null
     image = serializers.ImageField(required=False, allow_null=True)
     
     class Meta:
@@ -17,8 +16,7 @@ class PartnershipSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at', 'image_url']
-        
-        # Make some fields optional
+
         extra_kwargs = {
             'manager_supervisor_2': {'required': False, 'allow_blank': True, 'allow_null': True},
             'remarks': {'required': False, 'allow_blank': True, 'allow_null': True},
@@ -33,11 +31,9 @@ class PartnershipSerializer(serializers.ModelSerializer):
         return None
     
     def validate(self, attrs):
-        # Validate expiration date is after establishment date
         date_established = attrs.get('date_established')
         expiration_date = attrs.get('expiration_date')
-        
-        # For updates, get existing values if not provided
+
         if self.instance:
             if not date_established:
                 date_established = self.instance.date_established

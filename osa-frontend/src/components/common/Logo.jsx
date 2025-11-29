@@ -10,7 +10,7 @@ const Logo = ({ size = 'medium', className = '' }) => {
 
   return (
     <div
-      className={`${sizeClasses[size]} ${className} flex items-center justify-center flex-shrink-0 bg-white overflow-hidden`}
+      className={`${sizeClasses[size]} ${className} flex items-center justify-center flex-shrink-0 overflow-hidden`}
     >
       <img 
         src="/crossians.png" 
@@ -32,7 +32,7 @@ export const Logo1 = ({ size = 'medium', className = '' }) => {
 
   return (
     <div
-      className={`${sizeClasses[size]} ${className} flex items-center justify-center flex-shrink-0 bg-red-700 overflow-hidden`}
+      className={`${sizeClasses[size]} ${className} flex items-center justify-center flex-shrink-0 overflow-hidden`}
     >
       <img 
         src="/crossians.png" 

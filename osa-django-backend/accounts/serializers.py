@@ -21,13 +21,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['email', 'password', 'full_name', 'role', 'department']
     
     def validate(self, attrs):
-        # Validate department is required for department role
+
         if attrs.get('role') == 'department' and not attrs.get('department'):
             raise serializers.ValidationError({
                 'department': 'Department is required for department role'
             })
         
-        # Clear department for non-department roles
+
         if attrs.get('role') != 'department':
             attrs['department'] = None
         

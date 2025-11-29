@@ -35,12 +35,12 @@ export const API_ENDPOINTS = {
     BY_ID: (id) => `/partnerships/${id}/`
   },
   ADMIN: {
-    USERS: '/admin/users',
+    USERS: '/admin/users/',
     PENDING_USERS: '/admin/users/pending',
     USER_BY_ID: (id) => `/admin/users/${id}/`,
-    APPROVE_USER: (id) => `/admin/users/${id}/approve`,
-    REJECT_USER: (id) => `/admin/users/${id}/reject`,
-    CHANGE_USER_PASSWORD: (id) => `/admin/users/${id}/change-password`,
+    APPROVE_USER: (id) => `/admin/users/${id}/approve/`,
+    REJECT_USER: (id) => `/admin/users/${id}/reject/`,
+    CHANGE_USER_PASSWORD: (id) => `/admin/users/${id}/change-password/`,
     AUDIT_LOGS: '/admin/audit-logs',
     DASHBOARD_STATS: '/admin/dashboard-stats'
   }

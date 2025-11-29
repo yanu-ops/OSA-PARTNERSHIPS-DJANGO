@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { UserPlus, Mail, Lock, User, AlertCircle, CheckCircle } from 'lucide-react';
+import {  Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { validateEmail, validatePassword } from '../../utils/validation';
 import toast from 'react-hot-toast';
+import Logo from '../../components/common/Logo';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,8 +66,8 @@ const Register = () => {
     });
 
     if (result.success) {
-      setRegistrationSuccess(true);
-      toast.success('Registration successful! Awaiting admin approval.');
+      toast.success('Registration submitted! Please wait for admin approval.');
+      navigate('/login');
     } else {
       setErrors({ general: result.message || 'Registration failed' });
     }
@@ -75,59 +75,23 @@ const Register = () => {
     setLoading(false);
   };
 
-  if (registrationSuccess) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full">
-          {/* Success Message */}
-          <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-200">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <CheckCircle className="w-10 h-10 text-green-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h1>
-            </div>
-
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-blue-900 mb-3">
-                <strong>Your account has been created</strong>
-              </p>
-              <p className="text-sm text-blue-800">
-                Your account is currently <strong>pending admin approval</strong>. You will be able to log in once an administrator reviews and approves your registration.
-              </p>
-            </div>
-
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-              <p className="text-xs text-yellow-800">
-                <strong>Note:</strong> This usually takes 24-48 hours. You'll receive notification once your account is approved.
-              </p>
-            </div>
-
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full py-3 px-4 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800 transition-colors"
-            >
-              Go to Login Page
-            </button>
-          </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center p-4 relative">
+      <div className="absolute top-6 left-6">
+        <div className="w-10 h-10 bg-red-700 rounded-lg flex items-center justify-center shadow-lg">
+          <span className="text-white font-bold text-1xl">45</span>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-700 rounded-full mb-4">
-            <UserPlus className="w-8 h-8 text-white" />
-          </div>
+        <div className="flex justify-center mb-4">
+    <Logo size="xlarge" />
+  </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p className="text-gray-700">Register an Account</p>
+          <p className="text-gray-700">Register for OSA Partnership System</p>
         </div>
 
-        {/* Register Form */}
         <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-200">
           {errors.general && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
@@ -137,7 +101,7 @@ const Register = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Full Name */}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
@@ -160,7 +124,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Email */}
+  
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
@@ -183,7 +147,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Password */}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
@@ -206,7 +170,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Confirm Password */}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Confirm Password
@@ -229,7 +193,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Submit Button */}
+
             <button
               type="submit"
               disabled={loading}
@@ -239,7 +203,7 @@ const Register = () => {
             </button>
           </form>
 
-          {/* Login Link */}
+ 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-700">
               Already have an account?{' '}

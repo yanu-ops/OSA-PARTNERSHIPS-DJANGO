@@ -26,30 +26,25 @@ class Partnership(models.Model):
         ('SBME', 'School of Business and Management Education'),
         ('CHATME', 'College of Hospitality and Tourism Management Education'),
     ]
-    
-    # Basic Information
+
     business_name = models.CharField(max_length=255)
     department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
     address = models.TextField()
-    
-    # Contact Information
+
     contact_person = models.CharField(max_length=255)
     manager_supervisor_1 = models.CharField(max_length=255)
     manager_supervisor_2 = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(validators=[EmailValidator()])
     contact_number = models.CharField(max_length=50)
-    
-    # Partnership Details
+
     date_established = models.DateField()
     expiration_date = models.DateField()
-    school_year = models.CharField(max_length=20)  # e.g., "2024-2025"
+    school_year = models.CharField(max_length=20)  
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
-    
-    # Additional Information
+
     remarks = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to=partnership_image_path, blank=True, null=True)
-    
-    # Metadata
+
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -72,11 +67,10 @@ class Partnership(models.Model):
         return f"{self.business_name} - {self.department}"
     
     def save(self, *args, **kwargs):
-        # Auto-calculate school year if not provided
         if not self.school_year:
             year = self.date_established.year
             month = self.date_established.month
-            if month >= 8:  # August or later
+            if month >= 8:  
                 self.school_year = f"{year}-{year + 1}"
             else:
                 self.school_year = f"{year - 1}-{year}"

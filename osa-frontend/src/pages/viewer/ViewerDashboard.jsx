@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Building2, Eye } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { usePartnerships } from '../../hooks/usePartnerships';
 import Navbar from '../../components/common/Navbar';
-import StatsCard from '../../components/dashboard/StatsCard';
 import PartnershipFilters from '../../components/partnerships/PartnershipFilters';
 import PartnershipList from '../../components/partnerships/PartnershipList';
 import PartnershipModal from '../../components/partnerships/PartnershipModal';
@@ -52,34 +50,6 @@ const ViewerDashboard = () => {
    
 
      
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatsCard
-            title="Total Partnerships"
-            value={stats.total}
-            icon={Building2}
-            color="blue"
-          />
-          <StatsCard
-            title="Active"
-            value={stats.active}
-            icon={Eye}
-            color="green"
-          />
-          <StatsCard
-            title="For Renewal"
-            value={stats.for_renewal}
-            icon={Eye}
-            color="yellow"
-          />
-          <StatsCard
-            title="Terminated"
-            value={stats.terminated}
-            icon={Eye}
-            color="red"
-          />
-        </div>
-
-      
         <PartnershipFilters
           filters={filters}
           onFilterChange={updateFilters}
