@@ -76,7 +76,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative">
       <div className="absolute top-6 left-6">
         <div className="w-10 h-10 bg-red-700 rounded-lg flex items-center justify-center shadow-lg">
           <span className="text-white font-bold text-1xl">45</span>

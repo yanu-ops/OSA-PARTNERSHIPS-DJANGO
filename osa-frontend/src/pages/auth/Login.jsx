@@ -101,9 +101,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative">
 
-      {/* Back to Public View Button */}
       <div className="absolute top-6 left-6">
         <button
           onClick={() => navigate('/public')}

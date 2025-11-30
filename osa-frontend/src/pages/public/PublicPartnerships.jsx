@@ -54,14 +54,14 @@ const PublicPartnerships = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-red-200 border-t-red-700 rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-red-500 border-t-red-700 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white">
+    <div className="min-h-screen bg-white">
 
       <nav className="bg-red-700 shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,7 +72,7 @@ const PublicPartnerships = () => {
               <Logo size="medium" />
               <div>
                 <h1 className="text-xl font-bold text-white">OSA Partnership System</h1>
-                <p className="text-xs text-red-100">Public Partnership Directory</p>
+                <p className="text-xs text-red-100">Holy Cross of Davao College</p>
               </div>
             </div>
 
@@ -206,7 +206,7 @@ const DepartmentSection = ({ dept, partnerships }) => {
   const pagination = usePagination(partnerships, 6);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 mb-8">
+    <div className="bg-white rounded-lg shadow-md p-6 border-2 border-gray-300 mb-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-gray-900">{dept}</h3>
@@ -253,7 +253,7 @@ const DepartmentSection = ({ dept, partnerships }) => {
 
 const PartnershipPublicCard = ({ partnership }) => {
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-red-300 hover:shadow-lg transition-all overflow-hidden">
+    <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-red-700 hover:shadow-lg transition-all overflow-hidden">
       {partnership.image_url ? (
         <div className="h-40 overflow-hidden bg-gray-100">
           <img
@@ -263,12 +263,12 @@ const PartnershipPublicCard = ({ partnership }) => {
           />
         </div>
       ) : (
-        <div className="h-40 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
-          <Building2 className="w-16 h-16 text-red-300" />
+        <div className="h-40 bg-white flex items-center justify-center">
+          <Building2 className="w-16 h-16 text-red-700" />
         </div>
       )}
 
-      <div className="p-4">
+      <div className="p-4 border-2 border-gray rounded-lg">
         <h4 className="font-semibold text-lg text-gray-900 mb-2">{partnership.business_name}</h4>
         <p className="text-sm text-gray-600 mb-3">{partnership.department}</p>
 
