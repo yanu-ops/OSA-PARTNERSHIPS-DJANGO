@@ -178,7 +178,7 @@ const DepartmentDashboard = () => {
           groupByDepartment={viewMode === 'all'}
           userDepartment={user?.department}
           userRole={user?.role}
-          itemsPerPage={6}
+          itemsPerPage={3}
         />
 
       

@@ -20,12 +20,7 @@ const ViewerDashboard = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedPartnership, setSelectedPartnership] = useState(null);
 
-  const stats = {
-    total: partnerships.length,
-    active: partnerships.filter(p => p.status === 'active').length,
-    for_renewal: partnerships.filter(p => p.status === 'for_renewal').length,
-    terminated: partnerships.filter(p => p.status === 'terminated').length
-  };
+
 
   const handleView = (partnership) => {
     setSelectedPartnership(partnership);
@@ -68,7 +63,7 @@ const ViewerDashboard = () => {
           groupByDepartment={true}
           userDepartment={null}
           userRole="viewer"
-          itemsPerPage={6}
+          itemsPerPage={3}
         />
 
      

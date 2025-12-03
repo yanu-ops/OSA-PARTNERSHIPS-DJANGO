@@ -27,6 +27,10 @@ const PartnershipList = ({
     if (userRole === 'department' && userDepartment) {
       return partnership.department !== userDepartment;
     }
+
+    if (userRole === 'public') {
+      return true;
+    }
     
 
     return false;
