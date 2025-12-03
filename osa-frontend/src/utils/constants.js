@@ -1,5 +1,5 @@
 export const DEPARTMENTS = [
-  { value: 'STE', label: 'Science, Technology, Engineering' },
+  { value: 'STE', label: 'School of Teacher Education' },
   { value: 'CET', label: 'Computer Engineering Technology' },
   { value: 'CCJE', label: 'Criminology and Criminal Justice Education' },
   { value: 'HuSoCom', label: 'Hotel and Restaurant Services Community' },

@@ -10,14 +10,13 @@ from .permissions import IsAdminOrDepartment, IsAdminOrOwnDepartment
 import json
 
 
-# ============= PUBLIC PARTNERSHIPS (NO AUTH REQUIRED) =============
+
 @api_view(['GET'])
-@permission_classes([AllowAny])  # No authentication required
+@permission_classes([AllowAny])  
 def get_public_partnerships(request):
     """Get all partnerships with limited info (public access)"""
     partnerships = Partnership.objects.all()
-    
-    # Apply filters
+
     department = request.query_params.get('department')
     school_year = request.query_params.get('school_year')
     search = request.query_params.get('search')
@@ -34,7 +33,6 @@ def get_public_partnerships(request):
             Q(department__icontains=search)
         )
     
-    # Always return limited serializer for public access
     serializer = PartnershipLimitedSerializer(
         partnerships,
         many=True,

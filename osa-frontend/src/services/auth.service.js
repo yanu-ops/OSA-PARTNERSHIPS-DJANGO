@@ -30,7 +30,6 @@ class AuthService {
       const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, userData);
       
       if (response.data.success) {
-        // Don't store token for pending users
         return { 
           success: true, 
           user: response.data.data,
